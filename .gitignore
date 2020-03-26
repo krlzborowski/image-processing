@@ -1,3 +1,7 @@
+# Local directories
+docs/
+matlab/
+
 # Exercise images
 *.bmp
 

@@ -1,3 +1,0 @@
-/home/koral/studia/Analiza i przetwarzanie obrazów cyfrowych/04_cpp_image_processing/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/koral/studia/Analiza i przetwarzanie obrazów cyfrowych/04_cpp_image_processing/cmake-build-debug/CMakeFiles/04_cpp_image_processing.dir
-/home/koral/studia/Analiza i przetwarzanie obrazów cyfrowych/04_cpp_image_processing/cmake-build-debug/CMakeFiles/edit_cache.dir
