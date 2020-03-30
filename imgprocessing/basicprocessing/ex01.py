@@ -1,6 +1,7 @@
 
 import numpy as np
 
+MAX_BRIGHTNESS = 256
 
 # a)
 def print_size(img):
@@ -17,7 +18,7 @@ def compress_image(img):
 # c)
 def brighten_image(img):
     brightness = int(input("Set brightness value (0-255): "))
-    if brightness < 0 or brightness > 255:
+    if brightness not in range(MAX_BRIGHTNESS):
         raise ValueError
     brighter_img = np.array(
         [np.array([np.array([el + brightness for el in pixel]) for pixel in row]) for row in img])
