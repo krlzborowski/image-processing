@@ -14,9 +14,12 @@ def run():
     mono_image = ex02.rgb2mono(image)
     histogram = ex02.make_histogram(mono_image)
     ex02.show_histogram(histogram)
-    # cum_dist = ex02.cumulative_distribution(histogram)
-    # plt.plot('xlabel', 'ylabel', data=cum_dist)
+    cum_dist = ex02.cumulative_distribution(histogram)
+    x, y = zip(*cum_dist.items())
+    plt.plot(x, y)
     plt.show()
+    output_shades_count = input("Enter number of output shades: ")
+
 
     # cv2.imwrite("basicprocessing/mono_polar.bmp", mono_image)
 

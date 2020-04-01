@@ -6,10 +6,12 @@ SHADES_COUNT = 256
 
 
 def rgb2mono(img):
+    """Converts whole rgb bitmap into mono"""
     return np.array([np.array([pix2mono(pix) for pix in col]) for col in img])
 
 
 def pix2mono(pix):
+    """Counts gray shade for a single pixel"""
     pix = int(0.299 * pix[0] + 0.587 * pix[1] + 0.114 * pix[2])
     if pix not in range(SHADES_COUNT):
         pix = 0
@@ -40,3 +42,5 @@ def cumulative_distribution(histogram):
 def show_histogram(histogram):
     plt.bar(histogram.keys(), histogram.values())
     plt.show()
+
+
