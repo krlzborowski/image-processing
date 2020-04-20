@@ -19,21 +19,19 @@ def pix2mono(pix):
 
 
 def make_histogram(mono_img):
-    hist = {}
+    hist = collections.OrderedDict()
+    for i in range(SHADES_COUNT):
+        hist[i] = 0
     for col in mono_img:
         for pix in col:
-            if pix not in hist.keys():
-                hist[pix] = 1
-            else:
-                hist[pix] += 1
+            hist[pix] += 1
     return hist
 
 
 def cumulative_distribution(histogram):
-    od = collections.OrderedDict(sorted(histogram.items()))
     count = 0
     cd = {}
-    for k, v in od.items():
+    for k, v in histogram.items():
         count += v
         cd[k] = count
     return cd
@@ -44,3 +42,17 @@ def show_histogram(histogram):
     plt.show()
 
 
+def reduce_colors(img, cum_distr, size, out_shades_count=10):
+    """Makes and applies look up table"""
+    width, height = size
+    n = 0
+    lut = []
+    for i in range(len(cum_distr)):
+        curr_val = list(cum_distr.values())[i]
+        if curr_val >= (n + 1) * width * height / out_shades_count:
+            n += 1
+            if n >= out_shades_count:
+                n = out_shades_count - 1
+        lut.append(int((SHADES_COUNT - 1) * n / (out_shades_count - 1)))
+
+    return np.array([np.array([lut[pix] for pix in col]) for col in img])

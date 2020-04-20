@@ -7,6 +7,7 @@ MAX_BRIGHTNESS = 256
 def print_size(img):
     width, height = img.shape[:2]
     print("Width: " + str(width) + " Height: " + str(height))
+    return width, height
 
 
 # b)
