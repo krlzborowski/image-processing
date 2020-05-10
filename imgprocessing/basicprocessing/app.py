@@ -1,6 +1,7 @@
-from imgprocessing.basicprocessing import ex01, ex02
+from imgprocessing.basicprocessing import ex01, ex02, ex03
 import cv2
 import matplotlib.pyplot as plt
+import math
 
 
 def run():
@@ -24,7 +25,10 @@ def run():
     # cv2.imwrite("basicprocessing/reduced_polar.bmp", reduced_image)
 
     # ex03
-
+    angle = int(input("Provide angle in degrees to rotate: "))
+    angle = math.radians(angle)
+    rotated = ex03.rotate(image, angle)
+    cv2.imwrite("basicprocessing/rotated.bmp", rotated)
 
 
 

@@ -1,11 +1,11 @@
-
 import numpy as np
 
 MAX_BRIGHTNESS = 256
 
+
 # a)
 def print_size(img):
-    width, height = img.shape[:2]
+    height, width = img.shape[:2]
     print("Width: " + str(width) + " Height: " + str(height))
     return width, height
 
@@ -24,5 +24,3 @@ def brighten_image(img):
     brighter_img = np.array(
         [np.array([np.array([el + brightness for el in pixel]) for pixel in row]) for row in img])
     return brighter_img
-
-
