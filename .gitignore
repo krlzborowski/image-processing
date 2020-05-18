@@ -5,6 +5,7 @@ matlab/
 
 # Exercise images
 *.bmp
+*.png
 
 # IDE conifig
 .idea/
