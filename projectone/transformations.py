@@ -1,4 +1,5 @@
 import numpy as np
+import cv2
 
 affine_tables = [
     [[-0.67, -0.02, 0], [-0.18, 0.81, 10], [0, 0, 1]],
@@ -32,14 +33,56 @@ def generate_fractal(img):
 
 
 def line_opening(img, length, tilt):
+    mask = create_mask(length)
+    erode(img, mask)
+    dilate(img, mask)
+    return
+
+
+def is_on_boundary(x, y, img, mask):
+    height, width = img.shape[:2]
+    mask_width = mask.shape[0]
+    half = int(mask_width/2)
+    if x <= half or y == 0 or x >= width - half or y == height:
+        return True
+    return False
+
+
+def erode(img, mask):
     pass
 
 
-def erode():
-    pass
+def dilate(img, mask):
+    height, width = img.shape[:2]
+    mask_width = mask.shape[0]
+    result = np.ndarray(img.shape, dtype='uint8')
+
+    for x in range(width):
+        for y in range(height):
+            if is_on_boundary(x, y, img, mask):
+                val = img[y][x]
+            else:
+                center = int(mask_width / 2)
+                neighbours = [img[y + j - center][x + i - center] for j in range(mask_width) for i in range(mask_width)
+                              if mask[j][i] == 1]
+                val = max(neighbours)
+            result[y][x] = val
+
+    return result
 
 
-def dilate():
-    pass
+def create_mask(length, tilt=0):
+    # TODO specify tilt of the mask
+
+    if tilt == 0:
+        mask = np.zeros((length, length), dtype=int)
+        mask[int(length / 2)] = np.ones(length, dtype=int)
+        return mask
+    else:
+        mask = np.zeros((length, length), dtype=int)
+
 
 # Wypukłe otoczenie
+
+def convex_surroundings():
+    pass
