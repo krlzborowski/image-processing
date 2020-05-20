@@ -2,6 +2,7 @@
 lectures/
 docs/
 matlab/
+algos.py
 
 # Exercise images
 *.bmp

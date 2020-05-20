@@ -32,11 +32,8 @@ def generate_fractal(img):
 # Otwarcie elementem linijnym o zadanej długosći i nachyleniu
 
 
-def line_opening(img, length, tilt):
-    mask = create_mask(length)
-    erode(img, mask)
-    dilate(img, mask)
-    return
+def line_opening(img, strel):
+    return dilate(erode(img, strel), strel)
 
 
 def is_on_boundary(x, y, img, mask):
@@ -48,41 +45,56 @@ def is_on_boundary(x, y, img, mask):
     return False
 
 
-def erode(img, mask):
-    pass
-
-
-def dilate(img, mask):
+def erode(img, strel):
     height, width = img.shape[:2]
-    mask_width = mask.shape[0]
+    strel_width = strel.shape[0]
     result = np.ndarray(img.shape, dtype='uint8')
 
     for x in range(width):
         for y in range(height):
-            if is_on_boundary(x, y, img, mask):
+            if is_on_boundary(x, y, img, strel):
                 val = img[y][x]
             else:
-                center = int(mask_width / 2)
-                neighbours = [img[y + j - center][x + i - center] for j in range(mask_width) for i in range(mask_width)
-                              if mask[j][i] == 1]
+                center = int(strel_width / 2)
+                neighbours = [img[y + j - center][x + i - center] for j in range(strel_width) for i in range(strel_width)
+                              if strel[j][i] == 1]
                 val = max(neighbours)
             result[y][x] = val
 
     return result
 
 
-def create_mask(length, tilt=0):
-    # TODO specify tilt of the mask
+def dilate(img, strel):
+    height, width = img.shape[:2]
+    strel_width = strel.shape[0]
+    result = np.ndarray(img.shape, dtype='uint8')
+
+    for x in range(width):
+        for y in range(height):
+            if is_on_boundary(x, y, img, strel):
+                val = img[y][x]
+            else:
+                center = int(strel_width / 2)
+                neighbours = [img[y + j - center][x + i - center] for j in range(strel_width) for i in range(strel_width)
+                              if strel[j][i] == 1]
+                val = min(neighbours)
+            result[y][x] = val
+
+    return result
+
+
+def create_strel(length, tilt=0):
+    # TODO specify tilt of the strel
 
     if tilt == 0:
-        mask = np.zeros((length, length), dtype=int)
-        mask[int(length / 2)] = np.ones(length, dtype=int)
-        return mask
+        strel = np.zeros((length, length), dtype=int)
+        strel[int(length / 2)] = np.ones(length, dtype=int)
+        return strel
     else:
-        mask = np.zeros((length, length), dtype=int)
+        strel = np.zeros((length, length), dtype=int)
 
 
 # Wypukłe otoczenie
 
-def convex_surroundings():
+def convex_hull():
     pass
