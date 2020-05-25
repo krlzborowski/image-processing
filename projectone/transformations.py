@@ -37,6 +37,15 @@ def line_opening(img, strel):
 
 
 def is_on_boundary(x, y, img, mask):
+    """
+    Checks if pixel with coordinates x and y is on boundary of image.
+    Doesn't include pixels closer than half of the mask.
+    :param x: x coordinate
+    :param y: y coordinate
+    :param img: image to check
+    :param mask: mask used in morphological function
+    :return: boolean
+    """
     height, width = img.shape[:2]
     mask_width = mask.shape[0]
     half = int(mask_width/2)
@@ -46,6 +55,12 @@ def is_on_boundary(x, y, img, mask):
 
 
 def erode(img, strel):
+    """
+    Erodes image with given structural element.
+    :param img: image to erode
+    :param strel: structural element used in erosion
+    :return: image after erosion
+    """
     height, width = img.shape[:2]
     strel_width = strel.shape[0]
     result = np.ndarray(img.shape, dtype='uint8')
