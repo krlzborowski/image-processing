@@ -115,10 +115,12 @@ def is_on_boundary(x, y, img, strel):
     :param strel: structuring element used in morphological function
     :return: boolean
     """
+
     height, width = img.shape[:2]
-    mask_width = strel.shape[0]
-    half = math.floor((mask_width - 1) / 2)
-    if x <= half or y <= half or x >= width - half or y >= height - half:
+    strel_height, strel_width = strel.shape[:2]
+    x_center = math.floor(strel_width / 2)
+    y_center = math.floor(strel_height/ 2)
+    if x <= x_center or y <= y_center or x >= width - x_center or y >= height - y_center:
         return True
     return False
 
@@ -131,7 +133,7 @@ def erode(img, strel):
     :return: np.ndarray image after erosion
     """
     height, width = img.shape[:2]
-    strel_width = strel.shape[0]
+    strel_height, strel_width = strel.shape[:2]
     result = np.ndarray(img.shape, dtype='uint8')
 
     for x in range(width):
@@ -139,8 +141,9 @@ def erode(img, strel):
             if is_on_boundary(x, y, img, strel):
                 val = 0
             else:
-                center = math.floor((strel_width - 1) / 2)
-                neighbours = [img[y + j - center][x + i - center] for j in range(strel_width) for i in
+                x_center = math.floor(strel_width / 2)
+                y_center = math.floor(strel_height  / 2)
+                neighbours = [img[y + j - y_center][x + i - x_center] for j in range(strel_height) for i in
                               range(strel_width)
                               if strel[j][i] == 1]
                 val = max(neighbours)
@@ -157,7 +160,7 @@ def dilate(img, strel):
     :return: np.ndarray image after erosion
     """
     height, width = img.shape[:2]
-    strel_width = strel.shape[0]
+    strel_height, strel_width = strel.shape[:2]
     result = np.ndarray(img.shape, dtype='uint8')
 
     for x in range(width):
@@ -165,8 +168,9 @@ def dilate(img, strel):
             if is_on_boundary(x, y, img, strel):
                 val = 0
             else:
-                center = math.floor((strel_width - 1) / 2)
-                neighbours = [img[y + j - center][x + i - center] for j in range(strel_width) for i in
+                x_center = math.floor(strel_width / 2)
+                y_center = math.floor(strel_height / 2)
+                neighbours = [img[y + j - y_center][x + i - x_center] for j in range(strel_height) for i in
                               range(strel_width)
                               if strel[j][i] == 1]
                 val = min(neighbours)
