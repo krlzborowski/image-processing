@@ -30,6 +30,68 @@ def generate_fractal(img):
 
 # Filtracja Kirscha, Brzeg - odbicie symetryczne. Dla RGB każda warstwa osobno
 
+def symmetric_boundary(img):
+    """
+    Extends image with pixels mirrored from the edge neighbourhood
+    :param np.ndarray img: image to be extended
+    :return: np.ndarray: extended image
+    """
+    result = np.insert(img, 0, img[1], 0)
+    result = np.append(result, result[[-2], :], 0)
+    result = np.insert(result, 0, result[:, 1], 1)
+    result = np.append(result, result[:, [-2]], 1)
+    return result
+
+
+def kirsch_filtration(img):
+    """
+    Filter using kirsch operator
+    :param np.ndarray img: image to be filtered
+    :return: np.ndarray: image after filtration
+    """
+    kirsch_0deg = np.array([[5, 5, 5], [-3, 0, -3], [-3, -3, -3]], dtype=np.int)
+    kirsch_45deg = np.array([[5, 5, -3], [5, 0, -3], [-3, -3, -3]], dtype=np.int)
+
+    extended_img = symmetric_boundary(img)
+    result = np.ndarray(extended_img.shape, dtype='uint8')
+    height, width = img.shape[:2]
+
+    for x in range(width):
+        for y in range(height):
+            values = []
+            for k in range(4):
+                kirsch_0deg = np.rot90(kirsch_0deg)
+                kirsch_45deg = np.rot90(kirsch_45deg)
+                sum0 = 0
+                sum45 = 0
+                for i in range(3):
+                    for j in range(3):
+                        sum0 += kirsch_0deg[j][i] * extended_img[y + j][x + i]
+                        sum45 += kirsch_45deg[j][i] * extended_img[y + j][x + i]
+
+                values.append(sum0)
+                values.append(sum45)
+
+            result[y][x] = max(values)
+
+    return result
+
+
+def kirsch_filtration_rgb(img):
+    """
+    Does kirsch filtration for each color layer separately
+    :param np.ndarray img: 3d array of rgb image to be filtrated
+    :return: tuple: each color layer filtration in separate np.ndarray
+    """
+    red_layer = img[:, :, 0]
+    green_layer = img[:, :, 1]
+    blue_layer = img[:, :, 2]
+    red_filtered = kirsch_filtration(red_layer)
+    green_filtered = kirsch_filtration(green_layer)
+    blue_filtered = kirsch_filtration(blue_layer)
+    return red_filtered, green_filtered, blue_filtered
+
+
 # Otwarcie elementem linijnym o zadanej długosći i nachyleniu
 
 
@@ -75,7 +137,7 @@ def erode(img, strel):
     for x in range(width):
         for y in range(height):
             if is_on_boundary(x, y, img, strel):
-                val = img[y][x]
+                val = 0
             else:
                 center = int((strel_width - 1) / 2)
                 neighbours = [img[y + j - center][x + i - center] for j in range(strel_width) for i in
@@ -101,7 +163,7 @@ def dilate(img, strel):
     for x in range(width):
         for y in range(height):
             if is_on_boundary(x, y, img, strel):
-                val = img[y][x]
+                val = 0
             else:
                 center = int((strel_width - 1) / 2)
                 neighbours = [img[y + j - center][x + i - center] for j in range(strel_width) for i in
@@ -199,17 +261,14 @@ def convex_hull(src_image):
     :return: result_image: The image after convex hull
     :rtype: np.array
     """
-    # create structural elements
     se_0deg = np.array([[1, 1, 0], [1, -1, 0], [1, 0, -1]], dtype=np.int)
     se_45deg = np.array([[1, 1, 1], [1, -1, 0], [0, -1, 0]], dtype=np.int)
 
     compare = np.zeros_like(src_image)
     result_image = src_image
-    # perform hit-or-miss until no change
     while not np.array_equal(result_image, compare):
         compare = result_image
 
-        # hit-or-miss for each se position
         for i in range(4):
             result_image = result_image | hit_miss(result_image, se_0deg)
             result_image = result_image | hit_miss(result_image, se_45deg)
@@ -219,21 +278,19 @@ def convex_hull(src_image):
     return result_image
 
 
+def thickening(img, strel):
+    pass
+
+
 def hit_miss(src_image, se):
     """
-    This method performs hit-or-miss operation
-    based on given structuring element
-    using logical and of two erosion
+    Performs hit-or-miss operation based on given structuring element using logical and of two erosion
     :param np.array src_image: The original source image
     :param np.array se: The structuring element
     :return: result_image: The image after dilation
     :rtype: np.array
     """
-    # create mask [0, 1] from [-1, 0, 1]
     true_mask = se * (se == 1)
     false_mask = se * (se == -1) * -1
-
-    # perform two erosion to get hit-or-miss
     result_image = erode(src_image, true_mask) & erode(~src_image, false_mask)
-
     return result_image

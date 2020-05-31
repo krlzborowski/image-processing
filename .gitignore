@@ -3,6 +3,7 @@ lectures/
 docs/
 matlab/
 algos.py
+test.m
 
 # Exercise images
 *.bmp

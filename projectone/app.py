@@ -6,7 +6,7 @@ import collections
 
 
 def run():
-    img = cv2.imread('mono_polar.bmp', 0)
+    img = cv2.imread('w_shape.png')
     # fractal = tr.generate_fractal(img)
     # cv2.imshow('Fractal', fractal)
     # cv2.waitKey()
@@ -14,10 +14,12 @@ def run():
     # cv2.imshow('elo', binary_img)
     # cv2.waitKey()
 
-    strel = tr.create_strel(10, 45)
-    # binary = binary_img
-    opened = tr.line_opening(binary_img, strel)
-
-    cv2.imshow('intput', binary_img)
-    cv2.imshow('open', opened)
+    # strel = tr.create_strel(10, 45)
+    # opened = tr.line_opening(img, strel)
+    # convex_img = tr.convex_hull(binary_img)
+    # kirsch_img = tr.kirsch_filtration(binary_img)
+    red, green, blue = tr.kirsch_filtration_rgb(img)
+    cv2.imshow('red', red)
+    cv2.imshow('green', green)
+    cv2.imshow('blue', blue)
     cv2.waitKey()
