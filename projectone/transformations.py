@@ -117,7 +117,7 @@ def is_on_boundary(x, y, img, strel):
     """
     height, width = img.shape[:2]
     mask_width = strel.shape[0]
-    half = int((mask_width - 1) / 2)
+    half = math.floor((mask_width - 1) / 2)
     if x <= half or y <= half or x >= width - half or y >= height - half:
         return True
     return False
@@ -139,7 +139,7 @@ def erode(img, strel):
             if is_on_boundary(x, y, img, strel):
                 val = 0
             else:
-                center = int((strel_width - 1) / 2)
+                center = math.floor((strel_width - 1) / 2)
                 neighbours = [img[y + j - center][x + i - center] for j in range(strel_width) for i in
                               range(strel_width)
                               if strel[j][i] == 1]
@@ -165,7 +165,7 @@ def dilate(img, strel):
             if is_on_boundary(x, y, img, strel):
                 val = 0
             else:
-                center = int((strel_width - 1) / 2)
+                center = math.floor((strel_width - 1) / 2)
                 neighbours = [img[y + j - center][x + i - center] for j in range(strel_width) for i in
                               range(strel_width)
                               if strel[j][i] == 1]

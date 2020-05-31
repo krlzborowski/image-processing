@@ -12,14 +12,14 @@ def run(args):
         print('Choose one type of input file: --rgb or --mono or --bin')
         sys.exit(1)
 
-    img = cv2.imread(args.input)
     index = types.index(True)
 
-    print('Choose transformation:\n')
+    print('Choose transformation:')
     if index == 0:
+        img = cv2.imread(args.input)
         print('\t(1) Kirsch filtration\n')
-        option = input()
-        if option == '1':
+        option = int(input('Option:\t'))
+        if option == 1:
             print('It may take a while...')
             red, green, blue = tr.kirsch_filtration_rgb(img)
             name = args.input.split('.')[0]
@@ -27,15 +27,49 @@ def run(args):
             cv2.imwrite(name + '_kirsch_green.bmp', green)
             cv2.imwrite(name + '_kirsch_blue.bmp', blue)
         else:
-            print('Wrong option')
+            print('Wrong option - select number of transformation and press enter')
 
     elif index == 1:
+        img = cv2.imread(args.input, 0)
         print('\t(1) Opening with line element\n'
               '\t(2) Convex hull\n')
+        option = int(input('Option:\t'))
+        if option == 1:
+            length = int(input('Length of structuring element:\t'))
+            degrees = int(input('Rotation for structuring element in degrees:\t'))
+            print('It may take a while...')
+            strel = tr.create_strel(length, degrees)
+            out = tr.line_opening(img, strel)
+            name = args.input.split('.')[0]
+            cv2.imwrite(name + '_opening_bin.bmp', out)
+        elif option == 2:
+            pass
+        else:
+            print('Wrong option - select number of transformation and press enter')
+
     elif index == 2:
+        img = cv2.imread(args.input, 0)
         print('\t(1) Fractal generation\n'
               '\t(2) Kirsch filtration\n'
               '\t(3) Opening with line element')
+        option = int(input('Option:\t'))
+        if option == 1:
+            print('Not implemented')
+        elif option == 2:
+            print('It may take a while...')
+            out = tr.kirsch_filtration(img)
+            name = args.input.split('.')[0]
+            cv2.imwrite(name + '_kirsch_mono.bmp', out)
+        elif option == 3:
+            length = int(input('Length of structuring element:\t'))
+            degrees = int(input('Rotation for structuring element in degrees:\t'))
+            print('It may take a while...')
+            strel = tr.create_strel(length, degrees)
+            out = tr.line_opening(img, strel)
+            name = args.input.split('.')[0]
+            cv2.imwrite(name + '_opening_mono.bmp', out)
+        else:
+            print('Wrong option - select number of transformation and press enter')
 
     # # fractal = tr.generate_fractal(img)
     # # cv2.imshow('Fractal', fractal)
