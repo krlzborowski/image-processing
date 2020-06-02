@@ -27,7 +27,7 @@ def run(args):
             cv2.imwrite(name + '_kirsch_green.bmp', green)
             cv2.imwrite(name + '_kirsch_blue.bmp', blue)
         else:
-            print('Wrong option - select number of transformation and press enter')
+            print('Wrong option - select number of desired transformation and press enter')
 
     elif index == 1:
         img = cv2.imread(args.input, 0)
@@ -43,9 +43,12 @@ def run(args):
             name = args.input.split('.')[0]
             cv2.imwrite(name + '_opening_bin.bmp', out)
         elif option == 2:
-            pass
+            print('It may take a while...')
+            out = tr.convex_hull(img)
+            name = args.input.split('.')[0]
+            cv2.imwrite(name + '_convex_hull.bmp', out)
         else:
-            print('Wrong option - select number of transformation and press enter')
+            print('Wrong option - select number of desired transformation and press enter')
 
     elif index == 2:
         img = cv2.imread(args.input, 0)
@@ -69,8 +72,9 @@ def run(args):
             name = args.input.split('.')[0]
             cv2.imwrite(name + '_opening_mono.bmp', out)
         else:
-            print('Wrong option - select number of transformation and press enter')
+            print('Wrong option - select number of desired transformation and press enter')
 
+    # img = cv2.imread('dziury.bmp', 0)
     # # fractal = tr.generate_fractal(img)
     # # cv2.imshow('Fractal', fractal)
     # # cv2.waitKey()
@@ -78,12 +82,15 @@ def run(args):
     # # cv2.imshow('elo', binary_img)
     # # cv2.waitKey()
     #
-    # # strel = tr.create_strel(10, 45)
+    # # strel = tr.create_strel(15, 70)
+    # # eroded = tr.erode(binary_img, strel)
+    # # dilated = tr.dilate(binary_img, strel)
     # # opened = tr.line_opening(img, strel)
-    # # convex_img = tr.convex_hull(binary_img)
+    # convex_img = tr.convex_hull(binary_img)
     # # kirsch_img = tr.kirsch_filtration(binary_img)
-    # red, green, blue = tr.kirsch_filtration_rgb(img)
-    # cv2.imshow('red', red)
-    # cv2.imshow('green', green)
-    # cv2.imshow('blue', blue)
+    # # red, green, blue = tr.kirsch_filtration_rgb(img)
+    # # cv2.imshow('eroded', eroded)
+    # # cv2.imshow('dilated', dilated)
+    # cv2.imshow('convex', convex_img)
+    # cv2.imshow('input', img)
     # cv2.waitKey()

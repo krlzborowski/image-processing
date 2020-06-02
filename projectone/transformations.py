@@ -125,7 +125,7 @@ def is_on_boundary(x, y, img, strel):
     return False
 
 
-def erode(img, strel):
+def dilate(img, strel):
     """
     Erodes image with given structuring element.
     :param np.ndarray img: image to erode
@@ -152,7 +152,7 @@ def erode(img, strel):
     return result
 
 
-def dilate(img, strel):
+def erode(img, strel):
     """
     Dilates image with given structuring element.
     :param np.ndarray img: np.ndarray img: image to dilate
@@ -280,10 +280,6 @@ def convex_hull(src_image):
             se_45deg = np.rot90(se_45deg)
 
     return result_image
-
-
-def thickening(img, strel):
-    pass
 
 
 def hit_miss(src_image, se):
