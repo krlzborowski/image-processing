@@ -7,15 +7,9 @@ import collections
 
 
 def run(args):
-    types = args.rgb, args.bin, args.mono
-    if sum(types) != 1:
-        print('Choose one type of input file: --rgb or --mono or --bin')
-        sys.exit(1)
-
-    index = types.index(True)
 
     print('Choose transformation:')
-    if index == 0:
+    if args.type == 'rgb':
         img = cv2.imread(args.input)
         print('\t(1) Kirsch filtration\n')
         option = int(input('Option:\t'))
@@ -29,7 +23,7 @@ def run(args):
         else:
             print('Wrong option - select number of desired transformation and press enter')
 
-    elif index == 1:
+    elif args.type == 'bin':
         img = cv2.imread(args.input, 0)
         print('\t(1) Opening with line element\n'
               '\t(2) Convex hull\n')
@@ -50,7 +44,7 @@ def run(args):
         else:
             print('Wrong option - select number of desired transformation and press enter')
 
-    elif index == 2:
+    elif args.type == 'mono':
         img = cv2.imread(args.input, 0)
         print('\t(1) Fractal generation\n'
               '\t(2) Kirsch filtration\n'
