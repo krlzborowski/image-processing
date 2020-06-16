@@ -1,30 +1,40 @@
 import numpy as np
-import cv2
 import math
-
-affine_tables = [
-    [[-0.67, -0.02, 0], [-0.18, 0.81, 10], [0, 0, 1]],
-    [[0.4, 0.4, 0], [-0.1, 0.4, 0], [0, 0, 1]],
-    [[-0.4, -0.4, 0], [-0.1, 0.4, 0], [0, 0, 1]],
-    [[-0.1, 0, 0], [0.44, 0.44, -2], [0, 0, 1]]
-]
+import random
 
 
 # Generowanie fraktali metodą z rozdz. 2.7 (punktowe) mono
 
 def generate_fractal(img):
-    # TODO: choose random table
-    # TODO: affine transformation for every pixel generated coordinate value increased by 1
-    fractal = np.copy(img)
-    table = affine_tables[1]
+    """
+    Generate fractal from image using affine transformations
+    :param np.ndarray img: input image
+    :returnn np.ndarray: generated fractal image
+    """
+    affine_tables = [
+        [[-0.67, -0.02, 0], [-0.18, 0.81, 10], [0, 0, 1]],
+        [[0.4, 0.4, 0], [-0.1, 0.4, 0], [0, 0, 1]],
+        [[-0.4, -0.4, 0], [-0.1, 0.4, 0], [0, 0, 1]],
+        [[-0.1, 0, 0], [0.44, 0.44, -2], [0, 0, 1]]
+    ]
+
     height, width = img.shape[:2]
-    for x in range(width):
-        for y in range(height):
-            x_new = int((table[0][0] * x + table[1][0] * y + table[2][0]) / \
-                        (table[0][2] * x + table[1][2] * y + table[2][2]))
-            y_new = int((table[0][1] * x + table[1][1] * y + table[2][1]) / \
-                        (table[0][2] * x + table[1][2] * y + table[2][2]))
-            fractal[x_new][y_new] += 1
+    fractal = np.zeros((height, width), dtype='uint8')
+    x = random.randint(0, width)
+    y = random.randint(0, height)
+    z = 1
+    matrix = np.array([[x], [y], [z]], dtype=np.int)
+    fractal[y, x] = 1
+
+    for i in range(10000000):
+        table = np.array(affine_tables[random.randint(0, 3)], dtype=np.float)
+        matrix = table @ matrix
+        x = math.floor(20 * matrix[0, 0] + width / 2)
+        y = math.floor(20 * matrix[1, 0] + height / 2)
+        if 0 <= x < width and 0 <= y < height:
+            if fractal[y, x] < 255:
+                fractal[y, x] += 1
+
     return fractal
 
 
@@ -115,11 +125,10 @@ def is_on_boundary(x, y, img, strel):
     :param strel: structuring element used in morphological function
     :return: boolean
     """
-
     height, width = img.shape[:2]
     strel_height, strel_width = strel.shape[:2]
     x_center = math.floor(strel_width / 2)
-    y_center = math.floor(strel_height/ 2)
+    y_center = math.floor(strel_height / 2)
     if x <= x_center or y <= y_center or x >= width - x_center or y >= height - y_center:
         return True
     return False
@@ -142,7 +151,7 @@ def dilate(img, strel):
                 val = 0
             else:
                 x_center = math.floor(strel_width / 2)
-                y_center = math.floor(strel_height  / 2)
+                y_center = math.floor(strel_height / 2)
                 neighbours = [img[y + j - y_center][x + i - x_center] for j in range(strel_height) for i in
                               range(strel_width)
                               if strel[j][i] == 1]

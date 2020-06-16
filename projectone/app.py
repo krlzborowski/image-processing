@@ -51,7 +51,11 @@ def run(args):
               '\t(3) Opening with line element')
         option = int(input('Option:\t'))
         if option == 1:
-            print('Not implemented')
+            print('It may take a while...')
+            out = tr.generate_fractal(img)
+            name = args.input.split('.')[0]
+            cv2.imwrite(name + '_fractal_mono.bmp', out)
+
         elif option == 2:
             print('It may take a while...')
             out = tr.kirsch_filtration(img)
@@ -67,24 +71,3 @@ def run(args):
             cv2.imwrite(name + '_opening_mono.bmp', out)
         else:
             print('Wrong option - select number of desired transformation and press enter')
-
-    # img = cv2.imread('dziury.bmp', 0)
-    # # fractal = tr.generate_fractal(img)
-    # # cv2.imshow('Fractal', fractal)
-    # # cv2.waitKey()
-    # ret, binary_img = cv2.threshold(img, 127, 255, cv2.THRESH_BINARY)
-    # # cv2.imshow('elo', binary_img)
-    # # cv2.waitKey()
-    #
-    # # strel = tr.create_strel(15, 70)
-    # # eroded = tr.erode(binary_img, strel)
-    # # dilated = tr.dilate(binary_img, strel)
-    # # opened = tr.line_opening(img, strel)
-    # convex_img = tr.convex_hull(binary_img)
-    # # kirsch_img = tr.kirsch_filtration(binary_img)
-    # # red, green, blue = tr.kirsch_filtration_rgb(img)
-    # # cv2.imshow('eroded', eroded)
-    # # cv2.imshow('dilated', dilated)
-    # cv2.imshow('convex', convex_img)
-    # cv2.imshow('input', img)
-    # cv2.waitKey()

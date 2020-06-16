@@ -3,11 +3,12 @@ lectures/
 docs/
 matlab/
 algos.py
-test.m
 
-# Exercise images
+# Exercise files
 *.bmp
 *.png
+*.m
+*.java
 
 # IDE conifig
 .idea/
