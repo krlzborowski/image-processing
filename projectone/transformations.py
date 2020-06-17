@@ -3,8 +3,6 @@ import math
 import random
 
 
-# Generowanie fraktali metodą z rozdz. 2.7 (punktowe) mono
-
 def generate_fractal(img):
     """
     Generate fractal from image using affine transformations
@@ -37,8 +35,6 @@ def generate_fractal(img):
 
     return fractal
 
-
-# Filtracja Kirscha, Brzeg - odbicie symetryczne. Dla RGB każda warstwa osobno
 
 def symmetric_boundary(img):
     """
@@ -97,9 +93,6 @@ def kirsch_filtration_rgb(img):
     for i in range(3):
         result[..., i] = kirsch_filtration(img[..., i])
     return result
-
-
-# Otwarcie elementem linijnym o zadanej długosći i nachyleniu
 
 
 def line_opening(img, strel):
@@ -261,8 +254,6 @@ def bresenham(x1, y1, x2, y2):
 
     return points
 
-
-# Wypukłe otoczenie
 
 def convex_hull(src_image):
     """
