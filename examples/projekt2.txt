@@ -1,0 +1,84 @@
+%% Projekt_2 Dariusz Stopka 298277
+
+close all; clear; clc;
+
+% ------- Wczytywanie -------
+
+N1=imread('por_06_N_1N.jpg');
+XN_330=imrotate(imread('por_06_330_XN.jpg'), 30, 'crop');
+XN=imread('por_06_N_XN.jpg');
+
+% ------- Braz -------
+
+braz = (N1(:, :, 1) < 100 & N1(:, :, 2) < 65 & N1(:, :, 3) < 50);
+
+% ------- Pory -------
+
+bin_pory = XN(:, :, 1) < 12 & XN(:, :, 2) < 8 & XN(:, :, 3) < 15;
+
+bin_pory = bin_pory & ~braz;
+
+bin_pory = bwmorph(bin_pory, 'clean');
+bin_pory = imopen(bin_pory, strel('disk', 5));
+temp = bin_pory;
+bin_pory = imerode(bin_pory, strel('disk', 20));
+bin_pory = imreconstruct(bin_pory, temp);
+bin_pory = imclose(bin_pory, strel('disk', 15));
+pory = bwareaopen(bin_pory, 100);
+
+[aseg, N] = bwlabel(bin_pory);
+pole_pory = 0;
+
+for i = 1:N
+    temp = (aseg==i);
+    pole_pory = pole_pory + bwarea(temp);
+end
+
+pole_pory / (3700^2)
+
+bw_pory = edge(pory, 'canny');
+bw_pory = imdilate(bw_pory, ones(3));
+rgb_pory = imoverlay(XN, bw_pory, [1 0 0]);
+
+% ------- Kwarc -------
+
+bin_kwarc= (XN(:,:,3) > XN(:,:,1)  ...
+   & (XN(:,:,3) > 8  & XN(:,:,2) > 2 & XN(:,:,1) >3) ...
+   | (XN(:, :, 1) > 200 & XN(:, :, 2) > 200 & XN(:, :, 3) > 200));
+
+
+bin_kwarc2 = (XN_330(:,:,3) > XN_330(:,:,1) ...
+   & (XN_330(:,:,3) > 8 & XN_330(:,:,2) > 2 & XN_330(:,:,1) > 3) ...
+   | (XN_330(:,:,1) > 200 & XN_330(:,:,2) > 200 & XN_330(:,:,3) > 200));
+
+
+bin_kwarc = bin_kwarc | bin_kwarc2;
+bin_kwarc = bin_kwarc &  ~pory & ~braz;
+
+bin_kwarc = bwmorph(bin_kwarc, 'clean');
+temp = bin_kwarc;
+bin_kwarc = imerode(bin_kwarc, strel('disk', 18));
+bin_kwarc = imreconstruct(bin_kwarc, temp);
+bin_kwarc = imclose(bin_kwarc, strel('disk', 6));
+bin_kwarc = imfill(bin_kwarc, 'holes');
+kwarc = bwareaopen(bin_kwarc, 100);
+
+[aseg, N] = bwlabel(bin_kwarc);
+pole_kwarc = 0;
+
+for i = 1:N
+    temp = (aseg==i);
+    pole_kwarc = pole_kwarc + bwarea(temp);
+end
+
+pole_kwarc / (3700^2)
+
+bw_kwarc = edge(kwarc, 'canny');
+bw_kwarc = imdilate(bw_kwarc, ones(3));
+rgb_kwarc = imoverlay(XN, bw_kwarc, [1 0 0]);
+
+rgb = imoverlay(XN, bw_pory, [1 0 0]);
+rgb = imoverlay(rgb, bw_kwarc, [0 1 0]);
+
+subplot(121), imshow(pory);
+subplot(122), imshow(kwarc);

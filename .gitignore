@@ -5,6 +5,8 @@ matlab/
 algos.py
 
 # Exercise files
+*.pdf
+*.jpg
 *.bmp
 *.png
 *.m
