@@ -63,7 +63,7 @@ def kirsch_filtration(img):
     kirsch_45deg = np.array([[5, 5, -3], [5, 0, -3], [-3, -3, -3]], dtype=np.int)
 
     extended_img = symmetric_boundary(img)
-    result = np.ndarray(extended_img.shape, dtype='uint8')
+    result = np.ndarray(img.shape, dtype='uint8')
     height, width = img.shape[:2]
 
     for x in range(width):
@@ -91,15 +91,12 @@ def kirsch_filtration_rgb(img):
     """
     Does kirsch filtration for each color layer separately
     :param np.ndarray img: 3d array of rgb image to be filtrated
-    :return: tuple: each color layer filtration in separate np.ndarray
+    :return: np.ndarray: each color layer filtrated in rgb np.ndarray image
     """
-    red_layer = img[:, :, 0]
-    green_layer = img[:, :, 1]
-    blue_layer = img[:, :, 2]
-    red_filtered = kirsch_filtration(red_layer)
-    green_filtered = kirsch_filtration(green_layer)
-    blue_filtered = kirsch_filtration(blue_layer)
-    return red_filtered, green_filtered, blue_filtered
+    result = np.ndarray(img.shape, dtype='uint8')
+    for i in range(3):
+        result[..., i] = kirsch_filtration(img[..., i])
+    return result
 
 
 # Otwarcie elementem linijnym o zadanej długosći i nachyleniu

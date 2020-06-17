@@ -15,11 +15,9 @@ def run(args):
         option = int(input('Option:\t'))
         if option == 1:
             print('It may take a while...')
-            red, green, blue = tr.kirsch_filtration_rgb(img)
+            out = tr.kirsch_filtration_rgb(img)
             name = args.input.split('.')[0]
-            cv2.imwrite(name + '_kirsch_red.bmp', red)
-            cv2.imwrite(name + '_kirsch_green.bmp', green)
-            cv2.imwrite(name + '_kirsch_blue.bmp', blue)
+            cv2.imwrite(name + '_kirsch.bmp', out)
         else:
             print('Wrong option - select number of desired transformation and press enter')
 
