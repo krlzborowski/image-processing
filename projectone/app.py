@@ -1,5 +1,3 @@
-# --input --output --fractal --mono --
-
 from projectone import transformations as tr
 import cv2
 import sys
@@ -7,7 +5,6 @@ import collections
 
 
 def run(args):
-
     print('Choose transformation:')
     if args.type == 'rgb':
         img = cv2.imread(args.input)

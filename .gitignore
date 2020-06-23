@@ -6,6 +6,8 @@ examples/
 algos.py
 
 # Exercise files
+*.docx
+*.bak
 *.pdf
 *.jpg
 *.bmp
